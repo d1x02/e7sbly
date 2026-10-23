@@ -1,0 +1,21 @@
+body {
+    font-family: 'Cairo', sans-serif;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-active:active {
+    transform: scale(0.96);
+}
+
+#progressBar {
+transform: scaleX(0);
+transform-origin: right center;
+transition: transform 500ms ease-out, background 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #progressBar {
+    transition: none;
+    }
+}

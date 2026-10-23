@@ -1,566 +1,278 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>احسبلي - e7sbly | حاسبة أجرة الميكروباص</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fffbe1',
-                            100: '#fff5b8',
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                            900: '#1e1b18'
-                        }
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>احسبلي - حاسبة أجرة الميكروباص</title>
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(31, 41, 55, 0.5);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
-        .btn-active:active {
-            transform: scale(0.95);
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif']
+          }
         }
-
-        #progressBar {
-            position: relative;
-            overflow: hidden;
-        }
-
-        #progressBar::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                120deg,
-                rgba(255,255,255,0.0) 0%,
-                rgba(255,255,255,0.5) 45%,
-                rgba(255,255,255,0.0) 100%
-            );
-            transform: translateX(-120%);
-            animation: shimmer 2.2s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-120%); }
-            100% { transform: translateX(120%); }
-        }
-    </style>
+      }
+    };
+  </script>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col justify-between pb-6 select-none">
 
-    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 sticky top-0 z-50 shadow-sm dark:shadow-md transition-colors">
-        <div class="max-w-md mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2.5">
-                <div class="bg-gradient-to-br from-blue-700 to-blue-900 border border-blue-500/30 text-white p-2 rounded-xl shadow-lg shadow-blue-900/40 flex items-center justify-center w-11 h-11">
-                    <svg class="w-8 h-8" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 38V24C8 19.5817 11.5817 16 16 16H42C48.6274 16 54 21.3726 54 28V38C54 40.2091 52.2091 42 50 42H48V44C48 46.2091 46.2091 48 44 48H40C37.7909 48 36 46.2091 36 44V42H28V44C28 46.2091 26.2091 48 24 48H20C17.7909 48 16 46.2091 16 44V42H8V38Z" fill="#93C5FD"/>
-                        <path d="M16 16H40C44.4183 16 48 19.5817 48 24V26H12V20C12 17.7909 13.7909 16 16 16Z" fill="#7DD3FC"/>
-                        <rect x="14" y="20" width="8" height="7" rx="2" fill="#0284C7"/>
-                        <rect x="24" y="20" width="8" height="7" rx="2" fill="#0284C7"/>
-                        <rect x="34" y="20" width="8" height="7" rx="2" fill="#0284C7"/>
-                        <rect x="44" y="20" width="6" height="7" rx="2" fill="#0284C7"/>
-                        <path d="M48 20H51C52.6569 20 54 21.3431 54 23V27H48V20Z" fill="#E0F2FE"/>
-                        <circle cx="20" cy="42" r="5" fill="#0F172A"/>
-                        <circle cx="20" cy="42" r="2" fill="#94A3B8"/>
-                        <circle cx="42" cy="42" r="5" fill="#0F172A"/>
-                        <circle cx="42" cy="42" r="2" fill="#94A3B8"/>
-                        <rect x="8" y="33" width="46" height="3" fill="#0284C7"/>
-                        <circle cx="52" cy="31" r="2" fill="#FACC15"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col justify-center">
-                    <h1 class="text-xl font-black text-amber-500 dark:text-amber-400 tracking-wide leading-tight">احسبلي <span class="text-[10px] text-slate-500 dark:text-slate-400 font-normal">[e7sbly]</span></h1>
-                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-0.5 leading-none">
-                        Made with <i class="fa-solid fa-heart text-rose-500 text-[9px]"></i> by <span class="text-amber-600 dark:text-amber-400 font-extrabold">Youssef</span>
-                    </p>
-                </div>
-            </div>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-cairo">
 
-            <div class="flex items-center gap-2">
-                <button onclick="toggleTheme()" id="themeToggleBtn" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-2 rounded-xl text-sm font-bold transition btn-active">
-                    <i class="fa-solid fa-sun text-amber-500 dark:hidden text-sm"></i>
-                    <i class="fa-solid fa-moon hidden dark:block text-sm"></i>
-                </button>
-
-                <button onclick="resetTrip()" class="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition btn-active">
-                    <i class="fa-solid fa-rotate-right"></i> رحلة جديدة
-                </button>
-            </div>
+  <header class="sticky top-0 z-10 border-b border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="mx-auto flex max-w-md items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-800 text-white">
+          <i class="fa-solid fa-van-shuttle text-xl"></i>
         </div>
-    </header>
 
-    <main class="max-w-md mx-auto w-full p-4 flex-grow space-y-5">
+        <div>
+          <h1 class="text-xl font-black text-amber-500">
+            احسبلي <span class="text-xs font-normal text-slate-500">e7sbly</span>
+          </h1>
+          <p class="text-[10px] text-slate-500">حاسبة أجرة الميكروباص</p>
+        </div>
+      </div>
 
-        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-lg space-y-4 transition-colors">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-50 dark:bg-slate-950/70 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <label class="text-xs text-slate-500 dark:text-slate-400 font-bold block mb-1">أجرة الفرد (جنيه)</label>
-                    <div class="flex items-center">
-                        <input type="number" id="fareInput" step="0.5" min="0" value="7" oninput="updateTripCalculations()" class="bg-transparent text-amber-600 dark:text-amber-400 text-2xl font-extrabold w-full focus:outline-none" />
-                        <i class="fa-solid fa-money-bill-wave text-slate-400 dark:text-slate-600 text-sm"></i>
-                    </div>
-                </div>
+      <div class="flex gap-2">
+        <button
+          type="button"
+          onclick="toggleTheme()"
+          aria-label="تغيير المظهر"
+          class="btn-active rounded-xl border border-slate-300 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
+        >
+          <i id="themeIcon" class="fa-solid fa-moon text-amber-400"></i>
+        </button>
 
-                <div class="bg-slate-50 dark:bg-slate-950/70 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <label class="text-xs text-slate-500 dark:text-slate-400 font-bold block mb-1">عدد ركاب الميكروباص</label>
-                    <div class="flex items-center gap-1">
-                        <select id="passengersCount" onchange="updateTripCalculations()" class="bg-transparent text-slate-800 dark:text-white text-xl font-extrabold w-full focus:outline-none cursor-pointer">
-                            <option value="14" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">14 فرد (العادي)</option>
-                            <option value="11" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">11 فرد (تويوتا قصير)</option>
-                            <option value="8" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">8 ركاب (ثمنيات)</option>
-                            <option value="15" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">15 فرد (سقف عالي)</option>
-                            <option value="12" class="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">12 فرد</option>
-                        </select>
-                    </div>
-                </div>
+        <button
+          type="button"
+          onclick="resetTrip()"
+          class="btn-active rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-600 dark:text-rose-400"
+        >
+          <i class="fa-solid fa-rotate-right"></i>
+          رحلة جديدة
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-md flex-grow space-y-5 p-4">
+
+    <section class="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+          <label for="fareInput" class="mb-1 block text-xs font-bold text-slate-500 dark:text-slate-400">
+            أجرة الفرد (جنيه)
+          </label>
+          <input
+            id="fareInput"
+            type="number"
+            min="0"
+            step="0.5"
+            value="7"
+            oninput="updateTripCalculations()"
+            class="w-full bg-transparent text-2xl font-extrabold text-amber-600 focus:outline-none dark:text-amber-400"
+          >
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+          <label for="passengersCount" class="mb-1 block text-xs font-bold text-slate-500 dark:text-slate-400">
+            عدد ركاب الميكروباص
+          </label>
+          <select
+            id="passengersCount"
+            onchange="updateTripCalculations()"
+            class="w-full cursor-pointer bg-transparent text-sm font-extrabold focus:outline-none dark:text-white"
+          >
+            <option value="14">14 فرد (العادي)</option>
+            <option value="11">11 فرد (تويوتا قصير)</option>
+            <option value="8">8 ركاب (ثمنيات)</option>
+            <option value="15">15 فرد (سقف عالي)</option>
+            <option value="12">12 فرد</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <p class="mb-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+          اختيار سريع للأجرة:
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="setFare(3.5)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">3.5</button>
+          <button type="button" onclick="setFare(5)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">5</button>
+          <button type="button" onclick="setFare(7)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">7</button>
+          <button type="button" onclick="setFare(8.5)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">8.5</button>
+          <button type="button" onclick="setFare(10)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">10</button>
+          <button type="button" onclick="setFare(12)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">12</button>
+          <button type="button" onclick="setFare(15)" class="btn-active rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold dark:bg-slate-800">15</button>
+        </div>
+      </div>
+
+      <div class="space-y-3 border-t border-slate-200 pt-3 dark:border-slate-800">
+        <div class="flex items-end justify-between">
+          <div>
+            <span class="block text-xs text-slate-500 dark:text-slate-400">المُحصّل حتى الآن</span>
+            <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+              <span id="collectedMoney">0</span>
+              <span class="text-xs font-normal text-slate-500">جنيه</span>
             </div>
+          </div>
 
-            <div>
-                <span class="text-xs text-slate-500 dark:text-slate-400 block mb-2 font-bold">اختي��ر سريع للأجرة الشائعة:</span>
-                <div class="flex flex-wrap gap-1.5">
-                    <button onclick="setFare(3.5)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">3.5</button>
-                    <button onclick="setFare(5)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">5</button>
-                    <button onclick="setFare(7)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">7</button>
-                    <button onclick="setFare(8.5)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">8.5</button>
-                    <button onclick="setFare(10)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">10</button>
-                    <button onclick="setFare(12)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">12</button>
-                    <button onclick="setFare(15)" class="fare-btn bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg text-xs font-bold transition btn-active">15</button>
-                </div>
+          <div class="text-left">
+            <span class="block text-xs text-slate-500 dark:text-slate-400">الركاب الدفعين</span>
+            <div class="text-xl font-extrabold">
+              <span id="paidPassengers">0</span> /
+              <span id="totalPassengersDisplay">14</span>
             </div>
+          </div>
+        </div>
 
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
-                <div class="flex justify-between items-end mb-2">
-                    <div>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 block font-semibold">المُصَّل حتى الآن</span>
-                        <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400"><span id="collectedMoney">0</span> <span class="text-xs font-normal text-slate-500 dark:text-slate-400">جنيه</span></div>
-                    </div>
-                    <div class="text-left">
-                        <span class="text-xs text-slate-500 dark:text-slate-400 block font-semibold">الركاب الدفعين</span>
-                        <div class="text-xl font-extrabold text-slate-800 dark:text-slate-200"><span id="paidPassengers">0</span> / <span id="totalPassengersDisplay">14</span></div>
-                    </div>
-                </div>
+        <div>
+          <div class="mb-2 flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
+            <span>التقدم</span>
+            <span id="progressPercent">0%</span>
+          </div>
 
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 dark:text-slate-400">
-                        <span>التقدم</span>
-                        <span id="progressPercent">0%</span>
-                    </div>
+          <div class="h-4 w-full overflow-hidden rounded-full border border-slate-300 bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
+            <div
+              id="progressBar"
+              class="h-full w-full rounded-full bg-gradient-to-l from-amber-400 via-yellow-400 to-emerald-500"
+            ></div>
+          </div>
+        </div>
 
-                    <div class="relative h-4 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
-                        <div id="progressBar" class="h-full w-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-emerald-500 transition-all duration-500 ease-out shadow-lg shadow-amber-500/30"></div>
-                    </div>
-                </div>
+        <div
+          id="statusBadge"
+          class="rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-center text-xs font-bold dark:border-slate-800 dark:bg-slate-950"
+        >
+          <i class="fa-solid fa-circle-info text-amber-500"></i>
+          باقي <span id="remainingMoney" class="text-amber-600 dark:text-amber-400">0</span>
+          جنيه (أجرة <span id="remainingPassengers" class="text-amber-600 dark:text-amber-400">14</span> ركاب)
+        </div>
+      </div>
+    </section>
 
-                <div id="statusBadge" class="mt-3 text-center py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-950 text-xs font-bold border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-info text-amber-500"></i>
-                    <span>باقي <strong id="remainingMoney" class="text-amber-600 dark:text-amber-400">0</strong> جنيه (أجرة <strong id="remainingPassengers" class="text-amber-600 dark:text-amber-400">14</strong> ركاب)</span>
-                </div>
-            </div>
-        </section>
+    <section class="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <h2 class="font-bold">
+        <i class="fa-solid fa-calculator text-amber-500"></i>
+        حاسبة الباقي والتحصيل
+      </h2>
 
-        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-lg space-y-4 transition-colors">
-            <h2 class="text-base font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <i class="fa-solid fa-calculator text-amber-500 dark:text-amber-400"></i> حاسبة الباقي والتحصيل
-            </h2>
+      <div>
+        <label class="mb-2 block text-xs font-bold text-slate-500 dark:text-slate-400">
+          1. الفلوس المستلمة (الورقة):
+        </label>
 
-            <div>
-                <label class="text-xs text-slate-500 dark:text-slate-400 font-bold block mb-2">1. الفلوس المستلمة (الورقة):</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <button type="button" onclick="selectBill(200)" data-bill="200" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">200</button>
-                    <button type="button" onclick="selectBill(100)" data-bill="100" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">100</button>
-                    <button type="button" onclick="selectBill(50)" data-bill="50" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">50</button>
-                    <button type="button" onclick="selectBill(20)" data-bill="20" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">20</button>
-                    <button type="button" onclick="selectBill(10)" data-bill="10" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">10</button>
-                    <button type="button" onclick="selectBill(5)" data-bill="5" class="bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active">5</button>
-                </div>
-            </div>
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" onclick="selectBill(200)" data-bill="200" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">200</button>
+          <button type="button" onclick="selectBill(100)" data-bill="100" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">100</button>
+          <button type="button" onclick="selectBill(50)" data-bill="50" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">50</button>
+          <button type="button" onclick="selectBill(20)" data-bill="20" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">20</button>
+          <button type="button" onclick="selectBill(10)" data-bill="10" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">10</button>
+          <button type="button" onclick="selectBill(5)" data-bill="5" class="bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950">5</button>
+        </div>
+      </div>
 
-            <div>
-                <label class="text-xs text-slate-500 dark:text-slate-400 font-bold block mb-2">2. دفع عن كام فرد؟</label>
-                <div class="flex items-center gap-2">
-                    <button onclick="adjustPassengerCount(-1)" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white w-12 h-12 rounded-xl text-2xl font-black transition btn-active">−</button>
-                    <div class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-2 text-center">
-                        <span id="payingPassengersCount" class="text-2xl font-black text-amber-600 dark:text-amber-400">1</span>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 block font-semibold">راكب</span>
-                    </div>
-                    <button onclick="adjustPassengerCount(1)" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white w-12 h-12 rounded-xl text-2xl font-black transition btn-active">＋</button>
-                </div>
-            </div>
+      <div>
+        <label class="mb-2 block text-xs font-bold text-slate-500 dark:text-slate-400">
+          2. دفع عن كام فرد؟
+        </label>
 
-            <div id="resultContainer" class="bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-center space-y-2 relative overflow-hidden transition-colors">
-                <div class="text-xs text-slate-500 dark:text-slate-400 font-bold">الحسبة الحالية:</div>
-                <div class="flex justify-around items-center py-1 border-b border-slate-200 dark:border-slate-900">
-                    <div>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 block">المطلوب</span>
-                        <span id="requiredMoney" class="text-lg font-extrabold text-slate-800 dark:text-slate-200">7 ج</span>
-                    </div>
-                    <div class="text-slate-300 dark:text-slate-600 font-bold">|</div>
-                    <div>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 block">الورقة</span>
-                        <span id="givenBillDisplay" class="text-lg font-extrabold text-slate-800 dark:text-slate-200">0 ج</span>
-                    </div>
-                </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="adjustPassengerCount(-1)"
+            aria-label="تقليل عدد الركاب"
+            class="btn-active h-12 w-12 rounded-xl bg-slate-200 text-2xl font-black dark:bg-slate-800"
+          >−</button>
 
-                <div class="pt-2">
-                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-1">الـبـاقـي للـراكـب (رجّع له):</span>
-                    <div class="text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight" id="changeAmount">0 جنيه</div>
-                    <div id="changeDetails" class="text-xs text-slate-500 dark:text-slate-400 mt-1 min-h-[18px]">اختر الورقة وحُدد عدد الركاب</div>
-                </div>
-            </div>
+          <div class="flex-1 rounded-xl border border-slate-200 bg-slate-50 py-2 text-center dark:border-slate-800 dark:bg-slate-950">
+            <span id="payingPassengersCount" class="text-2xl font-black text-amber-600 dark:text-amber-400">1</span>
+            <span class="block text-xs text-slate-500">راكب</span>
+          </div>
 
-            <button id="addPaymentBtn" onclick="confirmPayment()" disabled class="w-full bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:text-slate-400 text-white px-4 py-3 rounded-xl font-black transition btn-active">
-                <i class="fa-solid fa-check-circle"></i> تأكيد وإضافة للمحفظة
-            </button>
-        </section>
+          <button
+            type="button"
+            onclick="adjustPassengerCount(1)"
+            aria-label="زيادة عدد الركاب"
+            class="btn-active h-12 w-12 rounded-xl bg-slate-200 text-2xl font-black dark:bg-slate-800"
+          >＋</button>
+        </div>
+      </div>
 
-        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-lg space-y-3 transition-colors">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-amber-500 dark:text-amber-400"></i> سجل المدفوعات للرحلة
-                </h3>
-                <span id="historyCount" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full font-bold">0 عمليات</span>
-            </div>
+      <div
+        id="resultContainer"
+        class="space-y-2 rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950"
+      >
+        <div class="text-xs font-bold text-slate-500">الحسبة الحالية:</div>
 
-            <div id="historyList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs font-semibold">
-                    لم يتم تسجيل أي دفعات بعد
-                </div>
-            </div>
-        </section>
+        <div class="flex justify-around border-b border-slate-200 py-1 dark:border-slate-800">
+          <div>
+            <span class="block text-xs text-slate-500">المطلوب</span>
+            <span id="requiredMoney" class="font-extrabold">7 ج</span>
+          </div>
+          <div class="text-slate-400">|</div>
+          <div>
+            <span class="block text-xs text-slate-500">الورقة</span>
+            <span id="givenBillDisplay" class="font-extrabold">0 ج</span>
+          </div>
+        </div>
 
-    </main>
+        <div class="pt-2">
+          <span class="mb-1 block text-xs font-bold text-slate-500">الباقي للراكب:</span>
+          <div id="changeAmount" class="text-4xl font-black text-emerald-600 dark:text-emerald-400">
+            0 جنيه
+          </div>
+          <div id="changeDetails" class="mt-1 min-h-5 text-xs text-slate-500">
+            اختر الورقة وحدد عدد الركاب
+          </div>
+        </div>
+      </div>
 
-    <footer class="text-center text-xs text-slate-500 max-w-md mx-auto px-4 mt-2 space-y-1">
-        <p class="text-[10px] text-slate-500 font-semibold">احسبلي - e7sbly | تطبيق حساب أجرة الميكروباص</p>
-    </footer>
+      <button
+        id="addPaymentBtn"
+        type="button"
+        onclick="confirmPayment()"
+        disabled
+        class="btn-active w-full rounded-xl bg-emerald-600 px-4 py-3 font-black text-white transition disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 dark:disabled:bg-slate-700"
+      >
+        <i class="fa-solid fa-circle-check"></i>
+        تأكيد وإضافة للمحفظة
+      </button>
+    </section>
 
-    <script>
-        let farePerPassenger = 7;
-        let totalSeats = 14;
-        let totalCollected = 0;
-        let paidCount = 0;
+    <section class="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold">
+          <i class="fa-solid fa-clock-rotate-left text-amber-500"></i>
+          سجل المدفوعات
+        </h2>
+        <span id="historyCount" class="rounded-full bg-slate-100 px-2 py-0.5 text-xs dark:bg-slate-800">
+          0 عمليات
+        </span>
+      </div>
 
-        let selectedBill = 0;
-        let payingCount = 1;
-        let history = [];
-        let audioCtx = null;
+      <div id="historyList" class="max-h-48 space-y-2 overflow-y-auto">
+        <div class="py-6 text-center text-xs text-slate-400">
+          لم يتم تسجيل أي دفعات بعد
+        </div>
+      </div>
+    </section>
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('e7sbly_theme');
-            if (savedTheme === 'light') {
-                document.documentElement.classList.remove('dark');
-            } else {
-                document.documentElement.classList.add('dark');
-            }
-        }
+  </main>
 
-        function toggleTheme() {
-            playSound('click');
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('e7sbly_theme', isDark ? 'dark' : 'light');
-        }
+  <footer class="mx-auto mt-2 max-w-md px-4 pb-4 text-center text-[10px] text-slate-500">
+    احسبلي - e7sbly | تطبيق حساب أجرة الميكروباص
+  </footer>
 
-        function playSound(type) {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                if (type === 'click') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.05);
-                } else if (type === 'success') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.25);
-                }
-            } catch (e) {}
-
-            if (navigator.vibrate) {
-                if (type === 'click') navigator.vibrate(15);
-                if (type === 'success') navigator.vibrate([30, 50, 30]);
-            }
-        }
-
-        window.onload = function() {
-            initTheme();
-            updateTripCalculations();
-        };
-
-        function setFare(amount) {
-            playSound('click');
-            document.getElementById('fareInput').value = amount;
-            updateTripCalculations();
-        }
-
-        function updateTripCalculations() {
-            farePerPassenger = parseFloat(document.getElementById('fareInput').value) || 0;
-            totalSeats = parseInt(document.getElementById('passengersCount').value) || 14;
-
-            const targetTotal = Math.max(0, farePerPassenger * totalSeats);
-            const remainingPassengers = Math.max(0, totalSeats - paidCount);
-            const remainingMoney = Math.max(0, targetTotal - totalCollected);
-
-            const collectedEl = document.getElementById('collectedMoney');
-            if (collectedEl) {
-                collectedEl.innerText = totalCollected.toLocaleString('ar-EG');
-            }
-
-            document.getElementById('paidPassengers').innerText = paidCount;
-            document.getElementById('totalPassengersDisplay').innerText = totalSeats;
-            document.getElementById('remainingPassengers').innerText = remainingPassengers;
-            document.getElementById('remainingMoney').innerText = remainingMoney.toLocaleString('ar-EG');
-
-            const progressBar = document.getElementById('progressBar');
-            const progressPercent = document.getElementById('progressPercent');
-            const statusBadge = document.getElementById('statusBadge');
-
-            let progressPct = 0;
-            if (targetTotal > 0) {
-                progressPct = (totalCollected / targetTotal) * 100;
-            }
-
-            const safePct = Math.min(100, Math.max(0, progressPct));
-            progressBar.style.width = '0%';
-            progressBar.style.transform = 'scaleX(0)';
-
-            requestAnimationFrame(() => {
-                progressBar.style.width = safePct + '%';
-                progressBar.style.transform = 'scaleX(1)';
-            });
-
-            progressPercent.innerText = Math.round(safePct) + '%';
-
-            if (safePct >= 100) {
-                progressPercent.className = 'text-[10px] font-black text-emerald-600 dark:text-emerald-400';
-                progressBar.className = 'h-full w-full rounded-full bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 transition-all duration-500 ease-out shadow-lg shadow-emerald-500/30';
-                statusBadge.className = 'mt-3 text-center py-2 px-3 rounded-xl bg-emerald-500/10 text-xs font-bold border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-2';
-                statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>الله ينور! اكتملت الأجرة بالكامل 🎉</span>';
-            } else {
-                progressPercent.className = safePct >= 60 ? 'text-[10px] font-black text-amber-600 dark:text-amber-400' : 'text-[10px] font-black text-slate-600 dark:text-slate-300';
-                progressBar.className = 'h-full rounded-full bg-gradient-to-r from-amber-400 via-yellow-400 to-emerald-500 transition-all duration-500 ease-out shadow-lg shadow-amber-500/30';
-                statusBadge.className = 'mt-3 text-center py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-950 text-xs font-bold border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2';
-                statusBadge.innerHTML = `<i class="fa-solid fa-circle-info text-amber-500 dark:text-amber-400"></i> <span>باقي <strong class="text-amber-600 dark:text-amber-400">${remainingMoney.toLocaleString('ar-EG')}</strong> جنيه (أجرة <strong class="text-amber-600 dark:text-amber-400">${remainingPassengers}</strong> ركاب)</span>`;
-            }
-
-            calculateChange();
-        }
-
-        function selectBill(amount) {
-            playSound('click');
-            selectedBill = amount;
-
-            document.querySelectorAll('.bill-btn').forEach(btn => {
-                if (parseInt(btn.getAttribute('data-bill')) === amount) {
-                    btn.className = 'bill-btn bg-amber-500 text-slate-950 border border-amber-400 p-2.5 rounded-xl font-black text-lg transition btn-active shadow-lg shadow-amber-500/20';
-                } else {
-                    btn.className = 'bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active';
-                }
-            });
-
-            calculateChange();
-        }
-
-        function adjustPassengerCount(delta) {
-            playSound('click');
-            payingCount = Math.max(1, Math.min(totalSeats - paidCount, payingCount + delta));
-            if (payingCount < 1) payingCount = 1;
-            document.getElementById('payingPassengersCount').innerText = payingCount;
-            calculateChange();
-        }
-
-        function calculateChange() {
-            const required = farePerPassenger * payingCount;
-            document.getElementById('requiredMoney').innerText = required + ' ج';
-            document.getElementById('givenBillDisplay').innerText = (selectedBill || 0) + ' ج';
-
-            const addBtn = document.getElementById('addPaymentBtn');
-            const changeDisplay = document.getElementById('changeAmount');
-            const changeDetails = document.getElementById('changeDetails');
-            const resultBox = document.getElementById('resultContainer');
-
-            if (!selectedBill) {
-                changeDisplay.innerText = '0 جنيه';
-                changeDisplay.className = 'text-3xl font-black text-slate-400 dark:text-slate-500';
-                changeDetails.innerText = 'حدد الورقة النقدية لحساب الباقي';
-                addBtn.disabled = true;
-                resultBox.className = 'bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-center space-y-2 relative overflow-hidden transition-colors';
-                return;
-            }
-
-            const change = selectedBill - required;
-
-            if (change >= 0) {
-                changeDisplay.innerText = change + ' جنيه';
-                changeDisplay.className = 'text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight';
-                changeDetails.innerHTML = change === 0
-                    ? '<span class="text-emerald-600 dark:text-emerald-400 font-bold">خالصة بدون باقي! 👌</span>'
-                    : `رجّع للراكب <strong class="text-amber-600 dark:text-amber-400 font-extrabold text-sm">${change} جنيه</strong> من الـ ${selectedBill}`;
-
-                addBtn.disabled = false;
-                resultBox.className = 'bg-slate-50 dark:bg-slate-950 border-2 border-emerald-500/40 rounded-2xl p-4 text-center space-y-2 relative overflow-hidden transition-colors';
-            } else {
-                const missing = Math.abs(change);
-                changeDisplay.innerText = 'ناقص ' + missing + ' ج';
-                changeDisplay.className = 'text-3xl font-black text-rose-500';
-                changeDetails.innerHTML = `<span class="text-rose-500 dark:text-rose-400 font-bold">المبلغ لا يكفي! يتبقى على الراكب ${missing} جنيه</span>`;
-                addBtn.disabled = true;
-                resultBox.className = 'bg-slate-50 dark:bg-slate-950 border-2 border-rose-500/40 rounded-2xl p-4 text-center space-y-2 relative overflow-hidden transition-colors';
-            }
-        }
-
-        function confirmPayment() {
-            if (!selectedBill) return;
-
-            const requiredAmount = farePerPassenger * payingCount;
-            const changeAmount = selectedBill - requiredAmount;
-
-            if (changeAmount < 0) return;
-
-            playSound('success');
-
-            const entry = {
-                id: Date.now(),
-                passengers: payingCount,
-                bill: selectedBill,
-                fareTotal: requiredAmount,
-                change: changeAmount,
-                time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-            };
-
-            history.unshift(entry);
-            totalCollected += requiredAmount;
-            paidCount += payingCount;
-
-            selectedBill = 0;
-            payingCount = 1;
-            document.getElementById('payingPassengersCount').innerText = payingCount;
-            document.querySelectorAll('.bill-btn').forEach(btn => {
-                btn.className = 'bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active';
-            });
-
-            updateTripCalculations();
-            renderHistory();
-        }
-
-        function undoPayment(id) {
-            playSound('click');
-            const index = history.findIndex(item => item.id === id);
-            if (index !== -1) {
-                const removed = history.splice(index, 1)[0];
-                totalCollected -= removed.fareTotal;
-                paidCount -= removed.passengers;
-                updateTripCalculations();
-                renderHistory();
-            }
-        }
-
-        function renderHistory() {
-            const listContainer = document.getElementById('historyList');
-            const historyCountDisplay = document.getElementById('historyCount');
-
-            historyCountDisplay.innerText = history.length + ' عمليات';
-
-            if (history.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs font-semibold">
-                        لم يتم تسجيل أي دفعات بعد
-                    </div>`;
-                return;
-            }
-
-            listContainer.innerHTML = history.map(item => `
-                <div class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 rounded-xl flex justify-between items-center text-xs transition-colors">
-                    <div class="flex items-center gap-2.5">
-                        <div class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 p-2 rounded-lg text-center min-w-[36px]">
-                            <span class="font-black text-sm block leading-none">${item.passengers}</span>
-                            <span class="text-[9px] text-slate-500 dark:text-slate-400">فرد</span>
-                        </div>
-                        <div>
-                            <div class="font-bold text-slate-800 dark:text-slate-200">
-                                استلم ${item.bill} ج <span class="text-slate-400 dark:text-slate-600">|</span> الباقي: <span class="text-emerald-600 dark:text-emerald-400 font-extrabold">${item.change} ج</span>
-                            </div>
-                            <div class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mt-0.5">
-                                صافي الأجرة: ${item.fareTotal} ج • ${item.time}
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="undoPayment(${item.id})" class="text-slate-400 hover:text-rose-500 p-1.5 rounded-lg hover:bg-rose-500/10 transition" title="حذف/تراجع">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function resetTrip() {
-            playSound('click');
-            if (history.length > 0) {
-                const confirmReset = window.confirm('هل أنت تأكد من بدء رحلة جديدة وتصفير السجل؟');
-                if (!confirmReset) return;
-            }
-
-            totalCollected = 0;
-            paidCount = 0;
-            selectedBill = 0;
-            payingCount = 1;
-            history = [];
-
-            document.getElementById('payingPassengersCount').innerText = payingCount;
-            document.querySelectorAll('.bill-btn').forEach(btn => {
-                btn.className = 'bill-btn bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 p-2.5 rounded-xl font-black text-lg transition btn-active';
-            });
-
-            updateTripCalculations();
-            renderHistory();
-        }
-    </script>
+  <script src="app.js" defer></script>
 </body>
 </html>
+
