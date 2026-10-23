@@ -6,7 +6,6 @@ let totalCollected = 0;
 let paidCount = 0;
 let selectedBill = 0;
 let payingCount = 1;
-let history = [];
 
 function formatMoney(value) {
     return Number(value || 0).toLocaleString('ar-EG');
@@ -57,15 +56,6 @@ function updateTripCalculations() {
     $('remainingPassengers').textContent = remainingPassengers;
     $('remainingMoney').textContent = formatMoney(remainingMoney);
 
-    calculateChange();
-}
-
-function resetBillSelection() {
-    selectedBill = 0;
-    document.querySelectorAll('.bill-button').forEach((button) => {
-        button.className =
-            'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
-    });
     calculateChange();
 }
 
@@ -164,23 +154,8 @@ function confirmPayment() {
     const change = safeBill - fareTotal;
     if (change < 0) return;
 
-    const entry = {
-        id: Date.now() + Math.random(),
-        passengers: safePassengers,
-        bill: safeBill,
-        fareTotal,
-        change,
-        time: new Date().toLocaleTimeString('ar-EG', {
-            hour: '2-digit',
-            minute: '2-digit'
-        })
-    };
-
-    history = [entry, ...history];
-
     totalCollected += fareTotal;
     paidCount += safePassengers;
-
     selectedBill = 0;
     payingCount = 1;
     $('payingPassengersCount').textContent = payingCount;
@@ -191,63 +166,13 @@ function confirmPayment() {
     });
 
     updateTripCalculations();
-    renderHistory();
-}
-
-function undoPayment(id) {
-    if (!Array.isArray(history)) history = [];
-    const index = history.findIndex((item) => Number(item.id) === Number(id));
-    if (index === -1) return;
-
-    const [removed] = history.splice(index, 1);
-    totalCollected = Math.max(0, totalCollected - (Number(removed.fareTotal) || 0));
-    paidCount = Math.max(0, paidCount - (Number(removed.passengers) || 0));
-
-    updateTripCalculations();
-    renderHistory();
-}
-
-function renderHistory() {
-    if (!Array.isArray(history)) history = [];
-
-    $('historyCount').textContent = `${history.length} عمليات`;
-
-    if (history.length === 0) {
-        $('historyList').innerHTML =
-            '<div class="py-6 text-center text-xs text-slate-400">لم يتم تسجيل أي دفعات بعد</div>';
-        return;
-    }
-
-    $('historyList').innerHTML = history.map((item) => `
-    <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs dark:border-slate-800 dark:bg-slate-950">
-    <div class="flex items-center gap-3">
-    <div class="min-w-10 rounded-lg bg-emerald-500/10 p-2 text-center text-emerald-600 dark:text-emerald-400">
-    <span class="block text-sm font-black">${item.passengers}</span>
-    <span class="text-[9px]">فرد</span>
-    </div>
-    <div>
-    <div class="font-bold">استلم ${formatMoney(item.bill)} ج | الباقي: ${formatMoney(item.change)} ج</div>
-    <div class="mt-1 text-[10px] text-slate-500">صافي الأجرة: ${formatMoney(item.fareTotal)} ج • ${item.time}</div>
-    </div>
-    </div>
-    <button type="button" onclick="undoPayment(${item.id})" aria-label="التراجع عن الدفعة"
-    class="rounded-lg p-2 text-slate-400 hover:bg-rose-500/10 hover:text-rose-500">
-    <i class="fa-solid fa-trash-can"></i>
-    </button>
-    </div>
-    `).join('');
 }
 
 function resetTrip() {
-    if (history.length > 0 && !window.confirm('هل تريد بدء رحلة جديدة وتصفير سجل المدفوعات؟')) {
-        return;
-    }
-
     totalCollected = 0;
     paidCount = 0;
     selectedBill = 0;
     payingCount = 1;
-    history = [];
 
     $('payingPassengersCount').textContent = payingCount;
 
@@ -257,12 +182,9 @@ function resetTrip() {
     });
 
     updateTripCalculations();
-    renderHistory();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     initTheme();
     updateTripCalculations();
-    renderHistory();
 });
-
