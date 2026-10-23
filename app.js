@@ -52,8 +52,8 @@ function updateTripCalculations() {
     const remainingPassengers = Math.max(0, totalSeats - paidCount);
     const remainingMoney = Math.max(0, targetTotal - totalCollected);
     const progress = targetTotal > 0
-    ? Math.min(100, Math.max(0, (totalCollected / targetTotal) * 100))
-    : 0;
+        ? Math.min(100, Math.max(0, (totalCollected / targetTotal) * 100))
+        : 0;
 
     $('collectedMoney').textContent = formatMoney(totalCollected);
     $('paidPassengers').textContent = paidCount;
@@ -71,23 +71,18 @@ function updateTripCalculations() {
     progressBar.style.transform = 'none';
 
     if (progress >= 100 && targetTotal > 0) {
-        progressBar.className =
-        'h-full w-full rounded-full bg-gradient-to-l from-emerald-400 via-green-500 to-emerald-600';
-    progressPercent.className = 'font-black text-emerald-600 dark:text-emerald-400';
-    statusBadge.className =
-    'rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-xs font-bold text-emerald-600 dark:text-emerald-400';
-    statusBadge.innerHTML =
-    '<i class="fa-solid fa-circle-check"></i> الله ينور! اكتملت الأجرة بالكامل 🎉';
+        progressBar.className = 'h-full rounded-full bg-gradient-to-l from-emerald-400 via-green-500 to-emerald-600';
+        progressPercent.className = 'font-black text-emerald-600 dark:text-emerald-400';
+        statusBadge.className = 'rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-xs font-bold text-emerald-600 dark:text-emerald-400';
+        statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> الله ينور! اكتملت الأجرة بالكامل 🎉';
     } else {
-        progressBar.className =
-        'h-full w-full rounded-full bg-gradient-to-l from-amber-400 via-yellow-400 to-emerald-500';
-    progressPercent.className = 'font-black text-slate-600 dark:text-slate-300';
-    statusBadge.className =
-    'rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-center text-xs font-bold dark:border-slate-800 dark:bg-slate-950';
-    statusBadge.innerHTML =
-    `<i class="fa-solid fa-circle-info text-amber-500"></i> باقي ` +
-    `<span class="text-amber-600 dark:text-amber-400">${formatMoney(remainingMoney)}</span> جنيه ` +
-    `(أجرة <span class="text-amber-600 dark:text-amber-400">${remainingPassengers}</span> ركاب)`;
+        progressBar.className = 'h-full rounded-full bg-gradient-to-l from-amber-400 via-yellow-400 to-emerald-500';
+        progressPercent.className = 'font-black text-slate-600 dark:text-slate-300';
+        statusBadge.className = 'rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-center text-xs font-bold dark:border-slate-800 dark:bg-slate-950';
+        statusBadge.innerHTML =
+            `<i class="fa-solid fa-circle-info text-amber-500"></i> باقي ` +
+            `<span class="text-amber-600 dark:text-amber-400">${formatMoney(remainingMoney)}</span> جنيه ` +
+            `(أجرة <span class="text-amber-600 dark:text-amber-400">${remainingPassengers}</span> ركاب)`;
     }
 
     calculateChange();
@@ -180,14 +175,14 @@ function confirmPayment() {
 
     history.unshift({
         id: Date.now(),
-                    passengers: payingCount,
-                    bill: selectedBill,
-                    fareTotal,
-                    change,
-                    time: new Date().toLocaleTimeString('ar-EG', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
+        passengers: payingCount,
+        bill: selectedBill,
+        fareTotal,
+        change,
+        time: new Date().toLocaleTimeString('ar-EG', {
+            hour: '2-digit',
+            minute: '2-digit'
+        })
     });
 
     totalCollected += fareTotal;
@@ -247,12 +242,11 @@ function renderHistory() {
 }
 
 function resetTrip() {
-    if (history.length > 0 &&
-        !window.confirm('هل تريد بدء رحلة جديدة وتصفير سجل المدفوعات؟')) {
+    if (history.length > 0 && !window.confirm('هل تريد بدء رحلة جديدة وتصفير سجل المدفوعات؟')) {
         return;
-        }
+    }
 
-        totalCollected = 0;
+    totalCollected = 0;
     paidCount = 0;
     selectedBill = 0;
     payingCount = 1;
@@ -274,3 +268,4 @@ window.addEventListener('DOMContentLoaded', () => {
     updateTripCalculations();
     renderHistory();
 });
+

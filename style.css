@@ -10,6 +10,8 @@ body {
 
 #progressBar {
     width: 0%;
+    height: 100%;
+    display: block;
     transform-origin: right center;
     transition: width 500ms ease-out, background 300ms ease;
 }
