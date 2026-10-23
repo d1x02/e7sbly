@@ -9,13 +9,13 @@ body {
 }
 
 #progressBar {
-transform: scaleX(0);
-transform-origin: right center;
-transition: transform 500ms ease-out, background 300ms ease;
+    width: 0%;
+    transform-origin: right center;
+    transition: width 500ms ease-out, background 300ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
     #progressBar {
-    transition: none;
+        transition: none;
     }
 }
