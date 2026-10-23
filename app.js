@@ -50,39 +50,12 @@ function updateTripCalculations() {
     const targetTotal = farePerPassenger * totalSeats;
     const remainingPassengers = Math.max(0, totalSeats - paidCount);
     const remainingMoney = Math.max(0, targetTotal - totalCollected);
-    const progress = targetTotal > 0
-        ? Math.min(100, Math.max(0, (totalCollected / targetTotal) * 100))
-        : 0;
 
     $('collectedMoney').textContent = formatMoney(totalCollected);
     $('paidPassengers').textContent = paidCount;
     $('totalPassengersDisplay').textContent = totalSeats;
     $('remainingPassengers').textContent = remainingPassengers;
     $('remainingMoney').textContent = formatMoney(remainingMoney);
-
-    const progressBar = $('progressBar');
-    const progressPercent = $('progressPercent');
-    const statusBadge = $('statusBadge');
-    const normalizedProgress = Number.isFinite(progress) ? Math.min(100, Math.max(0, progress)) : 0;
-
-    progressPercent.textContent = `${Math.round(normalizedProgress)}%`;
-    progressBar.style.width = `${normalizedProgress}%`;
-    progressBar.style.transform = 'none';
-
-    if (progress >= 100 && targetTotal > 0) {
-        progressBar.className = 'h-full rounded-full bg-gradient-to-l from-emerald-400 via-green-500 to-emerald-600';
-        progressPercent.className = 'font-black text-emerald-600 dark:text-emerald-400';
-        statusBadge.className = 'rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-xs font-bold text-emerald-600 dark:text-emerald-400';
-        statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> الله ينور! اكتملت الأجرة بالكامل 🎉';
-    } else {
-        progressBar.className = 'h-full rounded-full bg-gradient-to-l from-amber-400 via-yellow-400 to-emerald-500';
-        progressPercent.className = 'font-black text-slate-600 dark:text-slate-300';
-        statusBadge.className = 'rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 text-center text-xs font-bold dark:border-slate-800 dark:bg-slate-950';
-        statusBadge.innerHTML =
-            `<i class="fa-solid fa-circle-info text-amber-500"></i> باقي ` +
-            `<span class="text-amber-600 dark:text-amber-400">${formatMoney(remainingMoney)}</span> جنيه ` +
-            `(أجرة <span class="text-amber-600 dark:text-amber-400">${remainingPassengers}</span> ركاب)`;
-    }
 
     calculateChange();
 }
@@ -131,9 +104,9 @@ function calculateChange() {
     }
 
     if (remainingSeats === 0 || payingCount > remainingSeats) {
-        changeDisplay.textContent = 'اكتمل العدد';
+        changeDisplay.textContent = 'مكتمل';
         changeDisplay.className = 'text-2xl font-black text-rose-500';
-        details.textContent = 'تم تسجيل أجرة جميع الركاب';
+        details.textContent = 'تم جمع كامل أجرة الميكروباص';
         addButton.disabled = true;
         result.className =
         'space-y-2 rounded-2xl border-2 border-rose-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
@@ -166,6 +139,14 @@ function calculateChange() {
 
 function confirmPayment() {
     const remainingSeats = Math.max(0, totalSeats - paidCount);
+    if (remainingSeats === 0 || payingCount > remainingSeats) {
+        $('changeAmount').textContent = 'مكتمل';
+        $('changeDetails').textContent = 'تم جمع كامل أجرة الميكروباص';
+        $('addPaymentBtn').disabled = true;
+        alert('تم جمع كامل أجرة الميكروباص');
+        return;
+    }
+
     if (!selectedBill || payingCount < 1 || payingCount > remainingSeats) return;
 
     const fareTotal = farePerPassenger * payingCount;
