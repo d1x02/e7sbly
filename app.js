@@ -41,7 +41,6 @@ function updateTripCalculations() {
 
     const requestedSeats = Number.parseInt($('passengersCount').value, 10) || 14;
 
-    // Don't allow the seat count to drop below passengers already recorded.
     if (requestedSeats < paidCount) {
         $('passengersCount').value = String(totalSeats);
     } else {
