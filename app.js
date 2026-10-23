@@ -9,7 +9,7 @@ let payingCount = 1;
 let history = [];
 
 function formatMoney(value) {
-    return Number(value).toLocaleString('ar-EG');
+    return Number(value || 0).toLocaleString('ar-EG');
 }
 
 function initTheme() {
@@ -19,8 +19,8 @@ function initTheme() {
     const icon = $('themeIcon');
     if (icon) {
         icon.className = isDark
-        ? 'fa-solid fa-moon text-amber-400'
-        : 'fa-solid fa-sun text-amber-500';
+            ? 'fa-solid fa-moon text-amber-400'
+            : 'fa-solid fa-sun text-amber-500';
     }
 }
 
@@ -60,14 +60,23 @@ function updateTripCalculations() {
     calculateChange();
 }
 
+function resetBillSelection() {
+    selectedBill = 0;
+    document.querySelectorAll('.bill-button').forEach((button) => {
+        button.className =
+            'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
+    });
+    calculateChange();
+}
+
 function selectBill(amount) {
-    selectedBill = amount;
+    selectedBill = Number(amount) || 0;
 
     document.querySelectorAll('.bill-button').forEach((button) => {
-        const selected = Number(button.dataset.bill) === amount;
+        const selected = Number(button.dataset.bill) === selectedBill;
         button.className = selected
-        ? 'bill-button btn-active rounded-xl border border-amber-400 bg-amber-500 p-2.5 text-lg font-black text-slate-950'
-        : 'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
+            ? 'bill-button btn-active rounded-xl border border-amber-400 bg-amber-500 p-2.5 text-lg font-black text-slate-950'
+            : 'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
     });
 
     calculateChange();
@@ -99,7 +108,7 @@ function calculateChange() {
         details.textContent = 'حدد الورقة النقدية لحساب الباقي';
         addButton.disabled = true;
         result.className =
-        'space-y-2 rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950';
+            'space-y-2 rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-950';
         return;
     }
 
@@ -109,7 +118,7 @@ function calculateChange() {
         details.textContent = 'تم جمع كامل أجرة الميكروباص';
         addButton.disabled = true;
         result.className =
-        'space-y-2 rounded-2xl border-2 border-rose-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
+            'space-y-2 rounded-2xl border-2 border-rose-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
         return;
     }
 
@@ -120,12 +129,12 @@ function calculateChange() {
         changeDisplay.className = 'text-4xl font-black text-emerald-600 dark:text-emerald-400';
 
         details.innerHTML = change === 0
-        ? '<span class="font-bold text-emerald-600 dark:text-emerald-400">خالصة بدون باقي! 👌</span>'
-        : `رجّع للراكب <strong class="font-extrabold text-amber-600 dark:text-amber-400">${formatMoney(change)} جنيه</strong>`;
+            ? '<span class="font-bold text-emerald-600 dark:text-emerald-400">خالصة بدون باقي! 👌</span>'
+            : `رجّع للراكب <strong class="font-extrabold text-amber-600 dark:text-amber-400">${formatMoney(change)} جنيه</strong>`;
 
         addButton.disabled = false;
         result.className =
-        'space-y-2 rounded-2xl border-2 border-emerald-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
+            'space-y-2 rounded-2xl border-2 border-emerald-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
     } else {
         const shortfall = Math.abs(change);
         changeDisplay.textContent = `ناقص ${formatMoney(shortfall)} ج`;
@@ -133,7 +142,7 @@ function calculateChange() {
         details.textContent = `المبلغ لا يكفي؛ يتبقى ${formatMoney(shortfall)} جنيه`;
         addButton.disabled = true;
         result.className =
-        'space-y-2 rounded-2xl border-2 border-rose-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
+            'space-y-2 rounded-2xl border-2 border-rose-500/40 bg-slate-50 p-4 text-center dark:bg-slate-950';
     }
 }
 
@@ -147,33 +156,38 @@ function confirmPayment() {
         return;
     }
 
-    if (!selectedBill || payingCount < 1 || payingCount > remainingSeats) return;
+    const safeBill = Number(selectedBill) || 0;
+    const safePassengers = Number(payingCount) || 0;
+    if (!safeBill || safePassengers < 1 || safePassengers > remainingSeats) return;
 
-    const fareTotal = farePerPassenger * payingCount;
-    const change = selectedBill - fareTotal;
+    const fareTotal = farePerPassenger * safePassengers;
+    const change = safeBill - fareTotal;
     if (change < 0) return;
 
-    history.unshift({
-        id: Date.now(),
-        passengers: payingCount,
-        bill: selectedBill,
+    const entry = {
+        id: Date.now() + Math.random(),
+        passengers: safePassengers,
+        bill: safeBill,
         fareTotal,
         change,
         time: new Date().toLocaleTimeString('ar-EG', {
             hour: '2-digit',
             minute: '2-digit'
         })
-    });
+    };
+
+    history = [entry, ...history];
 
     totalCollected += fareTotal;
-    paidCount += payingCount;
+    paidCount += safePassengers;
+
     selectedBill = 0;
     payingCount = 1;
     $('payingPassengersCount').textContent = payingCount;
 
     document.querySelectorAll('.bill-button').forEach((button) => {
         button.className =
-        'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
+            'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
     });
 
     updateTripCalculations();
@@ -181,23 +195,26 @@ function confirmPayment() {
 }
 
 function undoPayment(id) {
-    const index = history.findIndex((item) => item.id === id);
+    if (!Array.isArray(history)) history = [];
+    const index = history.findIndex((item) => Number(item.id) === Number(id));
     if (index === -1) return;
 
     const [removed] = history.splice(index, 1);
-    totalCollected = Math.max(0, totalCollected - removed.fareTotal);
-    paidCount = Math.max(0, paidCount - removed.passengers);
+    totalCollected = Math.max(0, totalCollected - (Number(removed.fareTotal) || 0));
+    paidCount = Math.max(0, paidCount - (Number(removed.passengers) || 0));
 
     updateTripCalculations();
     renderHistory();
 }
 
 function renderHistory() {
+    if (!Array.isArray(history)) history = [];
+
     $('historyCount').textContent = `${history.length} عمليات`;
 
     if (history.length === 0) {
         $('historyList').innerHTML =
-        '<div class="py-6 text-center text-xs text-slate-400">لم يتم تسجيل أي دفعات بعد</div>';
+            '<div class="py-6 text-center text-xs text-slate-400">لم يتم تسجيل أي دفعات بعد</div>';
         return;
     }
 
@@ -236,7 +253,7 @@ function resetTrip() {
 
     document.querySelectorAll('.bill-button').forEach((button) => {
         button.className =
-        'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
+            'bill-button btn-active rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-lg font-black dark:border-slate-800 dark:bg-slate-950';
     });
 
     updateTripCalculations();
