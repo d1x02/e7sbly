@@ -60,14 +60,15 @@ function updateTripCalculations() {
     $('totalPassengersDisplay').textContent = totalSeats;
     $('remainingPassengers').textContent = remainingPassengers;
     $('remainingMoney').textContent = formatMoney(remainingMoney);
-    $('progressPercent').textContent = `${Math.round(progress)}%`;
-
-    // Keep the bar full-width and scale its fill from the right for RTL.
-    $('progressBar').style.transform = `scaleX(${progress / 100})`;
 
     const progressBar = $('progressBar');
     const progressPercent = $('progressPercent');
     const statusBadge = $('statusBadge');
+    const normalizedProgress = Number.isFinite(progress) ? Math.min(100, Math.max(0, progress)) : 0;
+
+    progressPercent.textContent = `${Math.round(normalizedProgress)}%`;
+    progressBar.style.width = `${normalizedProgress}%`;
+    progressBar.style.transform = 'none';
 
     if (progress >= 100 && targetTotal > 0) {
         progressBar.className =
